@@ -6,6 +6,17 @@ const API = "http://localhost:3001/sushis";
 
 function App() {
   const [sushis, setSushis] = useState([])
+  const [money, setMoney] = useState(100)
+
+  function eatSushi(sushi) {
+    if (sushi.price <= money) {
+      // console.log("eating", sushi)
+      setSushis(sushis.map(s => (sushi.id) === s.id ? { ...s, eaten: true } : s))
+      setMoney(money - sushi.price)
+      // sushi.eaten= true
+    }
+  }
+
   useEffect(() => {
     fetch(API)
       .then(res => res.json())
@@ -14,8 +25,8 @@ function App() {
 
   return (
     <div className="app">
-      <SushiContainer sushis={sushis} />
-      <Table />
+      <SushiContainer sushis={sushis} eatSushi={eatSushi}/>
+      <Table plates={sushis.filter((s)=>s.eaten)} money={money} />
     </div>
   );
 }
